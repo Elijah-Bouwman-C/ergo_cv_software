@@ -18,5 +18,5 @@ Since the firewall will most likely block any pip install attempts, download the
 
 - DO NOT USE SPYDER AS WHEELS ARE NOT COMPATIBLE WITH IT, use VSCode instead from the Software Center
 - Afterwards use `pip install --no-deps <file_path>` in the terminal 
-- If this doesn't work, you might need to install cmake, which I got by installing MATLAB 
+- If this doesn't work, you might need to install cmake, which comes with MATLAB 
 
