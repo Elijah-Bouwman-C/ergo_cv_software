@@ -28,9 +28,13 @@ class InputDialog(QWidget):
         options = QFileDialog.Options()
         options |= QFileDialog.ReadOnly
         file_path, _ = QFileDialog.getOpenFileName(self, "Select video file", "", "MP4 files (*.mp4 *.mov);;All files (*)", options=options)
-        if file_path:
-            self.video_path = file_path
-            self.video_path_label.setText(f'Selected: {file_path}')
+        try:
+            if file_path:
+                self.video_path = file_path
+                self.video_path_label.setText(f'Selected: {file_path}')
+        except:
+            self.file_error_label = QLabel('Filepath invalid please try again', self)
+            self.layout.addWidget(self.file_error_label)
 
     def submit(self):
         self.close()
