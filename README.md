@@ -11,3 +11,4 @@
 - Implement Snowflake API to directly input data
 - Implement face blurring (currrently in testing but unstable)
 - Improve general user interface
+- Develop a gesture detection model
