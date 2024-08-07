@@ -8,6 +8,7 @@
 
 
 # Future Goals:
+- Move app to the citrix platform
 - Implement Snowflake API to directly input data
 - Implement face blurring (currrently in testing but unstable)
 - Improve general user interface
