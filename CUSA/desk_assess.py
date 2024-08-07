@@ -4,7 +4,7 @@ import numpy as np
 import math
 import time
 import pandas as pd 
-from app_utils import *
+from desk_app_utils import *
 from desk_ui import *
 import os
 
@@ -17,7 +17,7 @@ def main():
     mp_pose = mp.solutions.pose
 
     #Config video
-    video_path = get_height_weight_video_path() #Custom function in app_utils for GUI
+    video_path = get_height_weight_video_path() #Custom function in desk_ui for GUI
     cap = cv2.VideoCapture(video_path)
 
     in_height = 5.5
@@ -45,11 +45,10 @@ def main():
             if results.pose_landmarks:
                 landmarks = results.pose_landmarks.landmark
                 #calculate limbs
-                trunk_tor,left_leg,left_lower_arm,left_upper_arm,trunk,neck,right_leg,right_lower_arm,right_upper_arm = define_angles(mp_pose) #Custom function in app_utils
-                ld,top_bottom,dist,mid_pt,new_dist = define_distances(mp_pose,landmarks) #Custom function in app_utils
-                limb_sets = [trunk_tor,left_leg,left_lower_arm,left_upper_arm,trunk,neck,right_leg,right_lower_arm,right_upper_arm]
-                left_leg_angle,right_leg_angle,left_upper_arm_angle,right_upper_arm_angle,left_lower_arm_angle,right_lower_arm_angle,trunk_angle,trunk_tort,neck_angle = make_angles(landmarks,limb_sets) #Custom function in app_utils
-                knee_angle,upper_arm_angle,lower_arm_angle = get_greatest(left_leg_angle,right_leg_angle,left_upper_arm_angle,right_upper_arm_angle,left_lower_arm_angle,right_lower_arm_angle) #Custom function in app_utils
+                left_leg,left_lower_arm,left_upper_arm,trunk,neck,right_leg,right_lower_arm,right_upper_arm = define_angles(mp_pose) #Custom function in desk_app_utils
+                limb_sets = [left_leg,left_lower_arm,left_upper_arm,trunk,neck,right_leg,right_lower_arm,right_upper_arm]
+                left_leg_angle,right_leg_angle,left_upper_arm_angle,right_upper_arm_angle,left_lower_arm_angle,right_lower_arm_angle,trunk_angle,neck_angle = make_angles(landmarks,limb_sets) #Custom function in desk_app_utils
+                knee_angle,upper_arm_angle,lower_arm_angle = get_greatest(left_leg_angle,right_leg_angle,left_upper_arm_angle,right_upper_arm_angle,left_lower_arm_angle,right_lower_arm_angle) #Custom function in desk_app_utils
                 frame.flags.writeable = False
                 frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 results = pose.process(frame)
@@ -63,13 +62,27 @@ def main():
                     landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style())
                 #save every second
                 if current_time - last_saved_time >= 1:
+                    
                     data = pd.DataFrame.from_dict({(int(current_time-start_time)):
                     [neck_angle,upper_arm_angle,lower_arm_angle,trunk_angle,knee_angle]}, 
                     orient='index',
                     columns = ['neck_angle','upper_arm_angle','lower_arm_angle','trunk_angle','knee_angle'])
-                    data['problematic_areas'] = get_desk_params(data) #Custom function in app_utils
+                    
+                    left_data = pd.DataFrame.from_dict({(int(current_time-start_time)):
+                    [left_neck_angle,left_upper_arm_angle,left_lower_arm_angle,left_trunk_angle,left_knee_angle]}, 
+                    orient='index',
+                    columns = ['neck_angle','upper_arm_angle','lower_arm_angle','trunk_angle','knee_angle'])
+                    
+                    data = pd.DataFrame.from_dict({(int(current_time-start_time)):
+                    [neck_angle,upper_arm_angle,lower_arm_angle,trunk_angle,knee_angle]}, 
+                    orient='index',
+                    columns = ['neck_angle','upper_arm_angle','lower_arm_angle','trunk_angle','knee_angle'])
+                    left_data['problematic_areas'] = get_desk_params(left_data)
+                    right_data['problematic_areas'] = get_desk_params(right_data) 
+                    data['problematic_areas'] = get_desk_params(data) #Custom function in desk_app_utils
                     dfs = pd.concat((dfs,data),ignore_index=False)
-                    print(dfs)
+                    
+
                     last_saved_time = current_time
 
             cv2.resizeWindow(window_name, 400, 700) 
@@ -78,8 +91,8 @@ def main():
             if cv2.waitKey(10) & 0xFF == ord('q'):
                 break
 
-    dfs.index.name = 'Time(S)'
-    dfs.to_csv('chair_assessment.csv')
+    datasets = [dfs,left_dfs,right_dfs,video_path] 
+    post_process(datasets) #Custom function in desk_app_utils
     cap.release()
 
     cv2.destroyAllWindows()
