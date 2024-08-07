@@ -13,3 +13,4 @@
 - Implement face blurring (currrently in testing but unstable)
 - Improve general user interface
 - Develop a gesture detection model
+- Fix video window sizing issues
