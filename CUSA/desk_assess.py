@@ -28,6 +28,8 @@ def main():
     no_flag = True
     dfs = pd.DataFrame(columns = ['neck_angle','upper_arm_angle','lower_arm_angle','trunk_angle',
     'knee_angle'])
+    left_dfs = pd.DataFrame(columns = ['upper_arm_angle','lower_arm_angle','knee_angle'])
+    right_dfs = pd.DataFrame(columns = ['upper_arm_angle','lower_arm_angle','knee_angle'])
     window_name = 'Desk Assessment'
     cv2.namedWindow(window_name,cv2.WINDOW_NORMAL)
     with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
@@ -69,19 +71,22 @@ def main():
                     columns = ['neck_angle','upper_arm_angle','lower_arm_angle','trunk_angle','knee_angle'])
                     
                     left_data = pd.DataFrame.from_dict({(int(current_time-start_time)):
-                    [left_neck_angle,left_upper_arm_angle,left_lower_arm_angle,left_trunk_angle,left_knee_angle]}, 
+                    [left_upper_arm_angle,left_lower_arm_angle,left_leg_angle]}, 
                     orient='index',
-                    columns = ['neck_angle','upper_arm_angle','lower_arm_angle','trunk_angle','knee_angle'])
+                    columns = ['upper_arm_angle','lower_arm_angle','knee_angle'])
                     
-                    data = pd.DataFrame.from_dict({(int(current_time-start_time)):
-                    [neck_angle,upper_arm_angle,lower_arm_angle,trunk_angle,knee_angle]}, 
+                    right_data = pd.DataFrame.from_dict({(int(current_time-start_time)):
+                    [right_upper_arm_angle,right_lower_arm_angle,right_leg_angle]}, 
                     orient='index',
-                    columns = ['neck_angle','upper_arm_angle','lower_arm_angle','trunk_angle','knee_angle'])
+                    columns = ['upper_arm_angle','lower_arm_angle','knee_angle'])
+                    
                     left_data['problematic_areas'] = get_desk_params(left_data)
                     right_data['problematic_areas'] = get_desk_params(right_data) 
                     data['problematic_areas'] = get_desk_params(data) #Custom function in desk_app_utils
+
                     dfs = pd.concat((dfs,data),ignore_index=False)
-                    
+                    left_dfs = pd.concat((left_dfs,left_data))
+                    right_dfs = pd.concat((right_dfs,right_data))
 
                     last_saved_time = current_time
 
