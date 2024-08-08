@@ -9,6 +9,10 @@
 # Hand Ergo Software
 - Meant to measure fine movements like soldering, wire stripping, etc.
 - hand_app_utils contains the helper functions and will likely need updated to better measure wrist and arm twisting
+# REBA Software
+- This package is meant to be run after the EJMS tools in order to validate high scores
+- This package is also based on lifting ergo software, but repackaged with a few different functions
+- 
 # Troubleshooting
 Since the firewall will most likely block any pip install attempts, download the pre-built wheels from these sources (you may have to search for a wheel built for your python version as these are for windows python 3.11):
 - download anaconda distribution from https://www.anaconda.com/download make sure to do a user installation so you don't need admin rights
