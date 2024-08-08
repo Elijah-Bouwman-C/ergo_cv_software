@@ -6,7 +6,7 @@
 - These csv files can be analyzed in EHS Smart or sent on to an ergonomist
 - EJMS scores can be checked using the REBA software package
   
-#Current Goal:
+# Current Goal:
 - Repackage data for EHS Smart
 
 # Future Goals:
