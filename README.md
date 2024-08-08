@@ -4,7 +4,7 @@
 - It takes in a .mp4 or .mov file and then maps a skeleton onto their limbs
 - Datapoints are extracted and converted into .csv files along with an anonymized recording of the simulation
 - These csv files can be analyzed in EHS Smart or sent on to an ergonomist
-
+- EJMS scores can be checked using the REBA software package
 #Current Goal:
 - Repackage data for EHS Smart
 
