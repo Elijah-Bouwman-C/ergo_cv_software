@@ -12,7 +12,14 @@
 # REBA Software
 - This package is meant to be run after the EJMS tools in order to validate high scores
 - This package is also based on lifting ergo software, but repackaged with a few different functions
-- 
+
+
+# Joint Diagrams
+| Limb   | Neck         | Shoulder | Elbow   | Wrist | Trunk        | Trunk Tort    | Leg   | 
+|--------|--------------|----------|---------|-------|--------------|---------------|-------|
+| Limb 1 | left ear     | hip      | shoulder| elbow | left shoulder| left ear      | hip   |
+| Limb 2 | left shoulder| shoulder | elbow   | wrist | left hip     | right shoulder| knee  |
+| Limb 3 |right shoulder| elbow    | wrist   | index | left knee    | left shoulder | ankle |
 # Troubleshooting
 Since the firewall will most likely block any pip install attempts, download the pre-built wheels from these sources (you may have to search for a wheel built for your python version as these are for windows python 3.11):
 - download anaconda distribution from https://www.anaconda.com/download make sure to do a user installation so you don't need admin rights
