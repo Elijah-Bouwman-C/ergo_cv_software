@@ -6,7 +6,7 @@ import time
 import os
 import pandas as pd
 from ejms_reba_utils import *
-
+from reba_ui import *
 
 def main():
     
@@ -17,7 +17,7 @@ def main():
     # mp_face_detection = mp.solutions.face_detection
 
     #Config video
-    height, weight, video_path = get_height_weight_video_path()
+    height, weight, video_path,coupling = get_height_weight_video_path()
     # height, weight, video_path = 5.5,25,fr"C:\Users\E40078317\Downloads\New_setup\Hay Bale.mp4"
     
     cap = cv2.VideoCapture(video_path)
@@ -33,7 +33,7 @@ def main():
                     'leg','wrist','lifting distance (ft)','dist_carried(ft)','standard lifting point(ft)','coupling'])
     both_dfs = pd.DataFrame(columns = ['left_leg_angle','right_leg_angle','left_upper_arm_angle','right_upper_arm_angle','left_lower_arm_angle','right_lower_arm_angle','trunk_angle','trunk_tort','neck_angle','right_wrist','left_wrist','coupling'])
     reba_dfs = pd.DataFrame()
-    coupling = 'good'
+   
     # face_detection = mp_face_detection.FaceDetection(min_detection_confidence=0.5,model_selection=1)
     with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
         while cap.isOpened():
