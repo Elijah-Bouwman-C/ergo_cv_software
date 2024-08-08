@@ -14,7 +14,7 @@
 - This package is also based on lifting ergo software, but repackaged with a few different functions
 
 
-# Joint Diagrams
+# Joint Angle Calculation Table
 | Limb   | Neck         | Shoulder | Elbow   | Wrist | Trunk        | Trunk Tort    | Leg   | 
 |--------|--------------|----------|---------|-------|--------------|---------------|-------|
 | Limb 1 | left ear     | hip      | shoulder| elbow | left shoulder| left ear      | hip   |
