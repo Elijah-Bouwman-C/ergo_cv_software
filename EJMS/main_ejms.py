@@ -10,6 +10,8 @@ from app_utils import *
 
 
 
+
+
 def main():
     
     #Config net model
@@ -19,9 +21,14 @@ def main():
     # mp_face_detection = mp.solutions.face_detection
 
     #Config video
-    height, weight, video_path = get_height_weight_video_path()
-    
+    height,weight,video_path = get_height_weight_video_path()
     cap = cv2.VideoCapture(video_path)
+    fps = cap.get(cv2.CAP_PROP_FPS)
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    output_path = f'{video_path)}.mp4'
+    vid_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    vid_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    out = cv2.VideoWriter(output_path,fourcc,15,(vid_width,vid_height))
     #initialize variables
     prev_dist = None
     dist_carried = 0
@@ -35,13 +42,12 @@ def main():
     ejms_dfs = pd.DataFrame(columns =['neck_score','trunk_score','shoulder_score','leg_score','slp_score','dist_score','ld_score','overall'])
     left_ejms_dfs = pd.DataFrame(columns =['neck_score','trunk_score','shoulder_score','leg_score','slp_score','dist_score','ld_score','overall'])
     right_ejms_dfs = pd.DataFrame(columns =['neck_score','trunk_score','shoulder_score','leg_score','slp_score','dist_score','ld_score','overall'])
-    face_detection = mp_face_detection.FaceDetection(min_detection_confidence=0.5,model_selection=1)
     with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
         while cap.isOpened():
             ret, frame = cap.read()
             if not ret:
                 break
-
+            blank_image = np.zeros_like(frame)
             current_time = time.time()
             image_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             
@@ -82,7 +88,7 @@ def main():
                 frame.flags.writeable = True
                 frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
                 mp_drawing.draw_landmarks(
-                    frame,
+                    blank_image,
                     results.pose_landmarks,
                     mp_pose.POSE_CONNECTIONS,
                     landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style())
@@ -104,14 +110,14 @@ def main():
                     dfs = pd.concat((dfs,data),ignore_index=False)
                     
                     last_saved_time = current_time
-            # frame = blur_face(image_rgb,frame,face_detection)
-            cv2.imshow('Press "q" to stop video and exit window', frame)
-            
+            cv2.imshow('Press "q" to stop video and exit window', blank_image)
+            out.write(blank_image)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
     #final save
     datasets = [dfs,ejms_dfs,left_ejms_dfs,right_ejms_dfs,video_path]
     post_process(datasets)
+    out.release()
     cap.release()
     cv2.destroyAllWindows()
 
