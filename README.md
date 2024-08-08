@@ -5,7 +5,8 @@
 - Datapoints are extracted and converted into .csv files
 - These csv files can be analyzed in EHS Smart or sent on to an ergonomist
 
-
+#Current Goal:
+- Repackage data for EHS Smart
 
 # Future Goals:
 - Move app to the citrix platform
