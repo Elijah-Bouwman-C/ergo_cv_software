@@ -15,7 +15,7 @@
 
 
 # Joint Angle Calculation Table
-| Limb   | Neck         | Shoulder | Elbow   | Wrist | Trunk        | Trunk Tort    | Leg   | 
+| Limb   | Neck Angle        | Shoulder Angle | Elbow Angle   | Wrist Angle | Trunk  Angle      | Trunk Tort Angle   | Leg  Angle  | 
 |--------|--------------|----------|---------|-------|--------------|---------------|-------|
 | Limb 1 | left ear     | hip      | shoulder| elbow | left shoulder| left ear      | hip   |
 | Limb 2 | left shoulder| shoulder | elbow   | wrist | left hip     | right shoulder| knee  |
