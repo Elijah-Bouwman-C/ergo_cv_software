@@ -28,6 +28,6 @@ Since the firewall will most likely block any pip install attempts, download the
 - download mediapipe from here https://files.pythonhosted.org/packages/c1/0f/4dc0802131756a9fe4d46d2824352014b85a75baca386cb9e43057f39f15/mediapipe-0.10.14-cp311-cp311-win_amd64.whl
 
 - DO NOT USE SPYDER AS WHEELS ARE NOT COMPATIBLE WITH IT, use VSCode instead from the Software Center
-- Afterwards use `pip install --no-deps <file_path>` in the terminal or whl_setup.py and navigate to your downloads folder
+- Afterwards use `pip install --no-deps <file_path>` in the terminal or use `whl_setup.py` and navigate to your downloads folder
 - If this doesn't work, you might need to install cmake, which comes with MATLAB 
 
