@@ -110,3 +110,4 @@ def main(video_path):
     with pd.ExcelWriter(f'{video_path}_hand_breakdown.xlsx',mode='w') as writer:  
         dfs.to_excel(writer,sheet_name='hand_ejms')
         freq_counts.to_excel(writer,sheet_name ='frequency_counts')
+
