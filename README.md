@@ -11,6 +11,7 @@
 - Set up EJMS appeal process w/ REBA
 
 # Future Goals:
+- Convert to .exe file
 - Move app to the citrix platform
 - Implement Snowflake API to directly input data
 - Improve general user interface
