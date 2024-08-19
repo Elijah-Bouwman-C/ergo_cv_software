@@ -18,7 +18,12 @@ def main(video_path):
     #Config video
     # video_path = get_height_weight_video_path() #Custom function in desk_ui for GUI
     cap = cv2.VideoCapture(video_path)
-
+    fps = cap.get(cv2.CAP_PROP_FPS)
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    output_path = f'{video_path}.mp4'
+    vid_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    vid_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    out = cv2.VideoWriter(output_path,fourcc,15,(vid_width,vid_height))
     in_height = 5.5
     start_time = time.time()
     last_saved_time = start_time
@@ -37,6 +42,8 @@ def main(video_path):
             if not ret:
                 break
             current_time = time.time()
+            blank_image = np.zeros_like(frame)
+
             image_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             
             results = pose.process(image_rgb)
@@ -57,7 +64,7 @@ def main(video_path):
                 frame.flags.writeable = True
                 frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
                 mp_drawing.draw_landmarks(
-                    frame,
+                    blank_image,
                     results.pose_landmarks,
                     mp_pose.POSE_CONNECTIONS,
                     landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style())
@@ -90,15 +97,16 @@ def main(video_path):
                     last_saved_time = current_time
 
             cv2.resizeWindow(window_name, 400, 700) 
+            out.write(blank_image)
 
-            cv2.imshow(window_name,frame)
+            cv2.imshow(window_name,blank_image)
             if cv2.waitKey(10) & 0xFF == ord('q'):
                 break
 
     datasets = [dfs,left_dfs,right_dfs,video_path] 
     post_process(datasets) #Custom function in desk_app_utils
     cap.release()
-
+    out.release()
     cv2.destroyAllWindows()
 
 
