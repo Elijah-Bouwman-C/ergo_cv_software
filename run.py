@@ -12,8 +12,10 @@ from PyQt5.QtWidgets import (
     QPushButton,
     QVBoxLayout,
     QWidget,
-    QRadioButton,QLineEdit,QFileDialog,
-)
+    QRadioButton,
+    QLineEdit,
+    QFileDialog,
+    )
 
 
 class hand_window(QWidget):
