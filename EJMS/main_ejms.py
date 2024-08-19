@@ -1,113 +1,120 @@
 import cv2
 import mediapipe as mp
-from Hand_Tools.hand_app_utils import *
-import time 
-import pandas as pd
+import numpy as np
+import math
+import time
 import os
+import pandas as pd
+# from EJMS.ergo_ui import *
+from EJMS.app_utils import *
 
 
 
 def main(height,weight,video_path):
-    #initialize neural network 
+    
+    #Config net model
     mp_drawing = mp.solutions.drawing_utils
     mp_drawing_styles = mp.solutions.drawing_styles
-    mp_hands = mp.solutions.hands 
     mp_pose = mp.solutions.pose
-    #initialize variables 
-    current_time = time.time()
-    start_time = current_time
-    last_saved_time = current_time
-    wrist_positions = []
-    dfs = pd.DataFrame()
-    left_flag = False
-    right_flag = False
+    # mp_face_detection = mp.solutions.face_detection
 
-    #initialize videos
-    # video_path = get_height_weight_video_path() #custom function in hand_app_utils
-    # video_path = 'testingHand'   
-
+    #Config video
+    # height,weight,video_path = get_height_weight_video_path()
     cap = cv2.VideoCapture(video_path)
-    cap.set(cv2.CAP_PROP_FRAME_WIDTH,640)
-    cap.set(cv2.CAP_PROP_FRAME_HEIGHT,480)
-    # cap = cv2.VideoCapture(0)
-    hands = mp_hands.Hands(model_complexity=0,min_detection_confidence=0.5,min_tracking_confidence=0.5)
-    pose = mp_pose.Pose(model_complexity=0,min_detection_confidence=0.5, min_tracking_confidence=0.5) 
     fps = cap.get(cv2.CAP_PROP_FPS)
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-    output_path = f'{os.path.basename(video_path)}_meeting.mp4'
+    output_path = f'{video_path}.mp4'
     vid_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     vid_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     out = cv2.VideoWriter(output_path,fourcc,15,(vid_width,vid_height))
-    frame_num= int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-    while cap.isOpened():
-        frame_count = 0 
-        success, frame = cap.read()
-        if not success:
-            print("Ignoring empty camera frame.")
-            break
-        #frame processing stuff
-        frame.flags.writeable = False
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        current_time = time.time()
-        
-        hand_results = hands.process(frame)
-        blank_image = np.zeros_like(frame)
-        frame.flags.writeable = True
-        frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
-        
-        if hand_results.multi_hand_landmarks and hand_results.multi_handedness:
-            #draw the hands
-            for hand_landmarks,handedness in zip(hand_results.multi_hand_landmarks,hand_results.multi_handedness):
+    #initialize variables
+    prev_dist = None
+    dist_carried = 0
+    start_time = time.time()
+    last_saved_time = start_time
+    current_time = start_time
+    previous_time = start_time
+    no_flag = True
+    dfs = pd.DataFrame(columns = ['neck_angle','upper_arm_angle','lower_arm_angle','trunk_angle','trunk_tort',
+    'leg_angle','lifting distance (ft)','dist_carried(ft)','standard lifting point(ft)','EJMS Score'])
+    ejms_dfs = pd.DataFrame(columns =['neck_score','trunk_score','shoulder_score','leg_score','slp_score','dist_score','ld_score','overall'])
+    left_ejms_dfs = pd.DataFrame(columns =['neck_score','trunk_score','shoulder_score','leg_score','slp_score','dist_score','ld_score','overall'])
+    right_ejms_dfs = pd.DataFrame(columns =['neck_score','trunk_score','shoulder_score','leg_score','slp_score','dist_score','ld_score','overall'])
+    with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
+        while cap.isOpened():
+            ret, frame = cap.read()
+            if not ret:
+                break
+            blank_image = np.zeros_like(frame)
+            current_time = time.time()
+            image_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            
+            results = pose.process(image_rgb)
+            
+            frame = cv2.cvtColor(image_rgb, cv2.COLOR_RGB2BGR)
+            
+            if results.pose_landmarks:
+                landmarks = results.pose_landmarks.landmark
+                trunk_tor,left_leg,left_lower_arm,left_upper_arm,trunk,neck,right_leg,right_lower_arm,right_upper_arm = define_angles(mp_pose)
+                ld,top_bottom,dist,mid_pt,new_dist = define_distances(mp_pose,landmarks)
+                limb_sets = [trunk_tor,left_leg,left_lower_arm,left_upper_arm,trunk,neck,right_leg,right_lower_arm,right_upper_arm]
+                
+                if no_flag == True:
+                    prev_dist = new_dist
+                    no_flag = False
+                
+                height_pix =  abs(landmarks[top_bottom[0]].y-landmarks[top_bottom[1]].y)/height
+                ld = abs(landmarks[ld[0]].y-landmarks[ld[1]].y)/height_pix
+                slp = (abs(landmarks[dist[0]].x-landmarks[mid_pt[0]].x)/height_pix)
+                left_leg_angle,right_leg_angle,left_upper_arm_angle,right_upper_arm_angle,left_lower_arm_angle,right_lower_arm_angle,trunk_angle,trunk_tort,neck_angle = make_angles(landmarks,limb_sets)
+                leg_angle,upper_arm_angle,lower_arm_angle = get_greatest(left_leg_angle,right_leg_angle,left_upper_arm_angle,right_upper_arm_angle,left_lower_arm_angle,right_lower_arm_angle)
+
+                # Calculate overall EJMS score
+                params = [neck_angle,upper_arm_angle,lower_arm_angle,trunk_angle,trunk_tort,leg_angle,ld,dist_carried,slp,start_time]
+                left_params = [neck_angle,left_upper_arm_angle,left_lower_arm_angle,trunk_angle,trunk_tort,left_leg_angle,ld,dist_carried,slp,start_time]
+                right_params = [neck_angle,right_upper_arm_angle,right_lower_arm_angle,trunk_angle,trunk_tort,right_leg_angle,ld,dist_carried,slp,start_time]
+                
+                ejms_df = overall_assess_ejms(params) 
+                right_ejms = overall_assess_ejms(right_params)
+                left_ejms = overall_assess_ejms(left_params)
+
+                frame.flags.writeable = False
+                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                results = pose.process(frame)
+
+                # Draw the pose annotation on the image.
+                frame.flags.writeable = True
+                frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
                 mp_drawing.draw_landmarks(
-                    frame,
-                    hand_landmarks,
-                    mp_hands.HAND_CONNECTIONS,
-                    mp_drawing_styles.get_default_hand_landmarks_style(),
-                    mp_drawing_styles.get_default_hand_connections_style())
-                
-                landmarks = [(lm.x,lm.y,lm.z) for lm in hand_landmarks.landmark]
-                hand_side = handedness.classification[0].label
-                #calculate finger angles
-                if hand_side == 'Left':
-                    left_flag = True
-                    r_thumb_angle,r_index_angle,r_middle_angle,r_ring_angle,r_pinky_angle,r_pinching,r_wrist_p = calculate_fin_angles(landmarks,start_time,hand_side,mp_hands) #custom function in hands_ergo_utils    
-                
-                if hand_side == 'Right':
-                    right_flag = True
-                    l_thumb_angle,l_index_angle,l_middle_angle,l_ring_angle,l_pinky_angle,l_pinching,l_wrist_p = calculate_fin_angles(landmarks,start_time,hand_side,mp_hands) #custom function in hand_app_utils
-        #draw the body and calculate wrist angles
-        pose_results = pose.process(frame)
-        if pose_results.pose_landmarks:
-            landmarks = pose_results.pose_landmarks.landmark
-            mp_drawing.draw_landmarks(
-                frame,
-                pose_results.pose_landmarks,
-                mp_pose.POSE_CONNECTIONS,
-                landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style())
-            left_wrist,right_wrist = get_wrist_angle(mp_pose,landmarks,start_time) #custom function in hand_app_utils    
-        #save every second
-        if pose_results.pose_landmarks and hand_results.multi_hand_landmarks and hand_results.multi_handedness:
-            if current_time - last_saved_time >= 1:
-                if left_flag == True and right_flag == True:
-                    dfset = pd.DataFrame.from_dict({(frame_count/30):[r_thumb_angle,r_index_angle,r_middle_angle,r_ring_angle,r_pinky_angle,r_pinching,l_thumb_angle,l_index_angle,l_middle_angle,l_ring_angle,l_pinky_angle,l_pinching,left_wrist,right_wrist]},
-                        orient='index',columns = ['r_thumb_angle','r_index_angle','r_middle_angle','r_ring_angle','r_pinky_angle','r_pinching','l_thumb_angle','l_index_angle','l_middle_angle','l_ring_angle','l_pinky_angle','l_pinching','left_wrist','right_wrist'])
-                    left_flag = False
-                    right_flag = False
+                    blank_image,
+                    results.pose_landmarks,
+                    mp_pose.POSE_CONNECTIONS,
+                    landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style())
+                # save every second
+                if current_time - last_saved_time >= 1:
+
+                    #Calculate Distances metric 
+                    dist_carried += horizontal_dist(new_dist,prev_dist,height_pix)
                     
-                    dfs = pd.concat((dfs,dfset),ignore_index=False)
+                    data = pd.DataFrame.from_dict({(int(current_time-start_time)):
+                    [neck_angle,upper_arm_angle,lower_arm_angle,trunk_angle,trunk_tort,leg_angle,round(ld,2),round(dist_carried,2),round(slp,2),ejms_df['overall']]}, 
+                    orient='index',
+                    columns = ['neck_angle','upper_arm_angle','lower_arm_angle','trunk_angle','trunk_tort',
+                    'leg_angle','lifting distance (ft)','dist_carried(ft)','standard lifting point(ft)','EJMS Score'])
+                    
+                    ejms_dfs = pd.concat((ejms_dfs,ejms_df),ignore_index=False)
+                    left_ejms_dfs = pd.concat((left_ejms_dfs,left_ejms),ignore_index=False)
+                    right_ejms_dfs = pd.concat((right_ejms_dfs,right_ejms),ignore_index=False)
+                    dfs = pd.concat((dfs,data),ignore_index=False)
+                    
                     last_saved_time = current_time
-        
-        if cv2.waitKey(5) & 0xFF == ord('q'):
-            break
-        out.write(frame)
-
-        cv2.imshow('MediaPipe Hands', frame)
-
+            cv2.imshow('Press "q" to stop video and exit window', blank_image)
+            out.write(blank_image)
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+    #final save
+    datasets = [dfs,ejms_dfs,left_ejms_dfs,right_ejms_dfs,video_path]
+    post_process(datasets)
     out.release()
     cap.release()
     cv2.destroyAllWindows()
-    freq_counts = ejms_assess(dfs) #custom function in hand_app_utils    
-    with pd.ExcelWriter(f'{video_path}_hand_breakdown.xlsx',mode='w') as writer:  
-        dfs.to_excel(writer,sheet_name='hand_ejms')
-        freq_counts.to_excel(writer,sheet_name ='frequency_counts')
-
