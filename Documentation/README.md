@@ -1,19 +1,17 @@
 # Lifting Ergo Software 
 - This package is mostly meant for lifting/pushing/pulling, although it can be repurposed for the CUSA since much of the code is the same
 - `app_utils.py` contains most of the functions to improve readability
-- `ergo_ui.py` contains the GUI written in pyqt5, which is effectively C++
 # CUSA Ergo Software
 - Almost a carbon copy of the lifting package, but separated for time
 - Mostly checks for 90 or 0 degree angles
--  `hand_ergo_ui.py` and `desk_ui.py` are carbon copies of each other
 # Hand Ergo Software
 - Meant to measure fine movements like soldering, wire stripping, etc.
 - hand_app_utils contains the helper functions and will likely need updated to better measure wrist and arm twisting
 # REBA Software
 - This package is meant to be run after the EJMS tools in order to validate high scores
 - This package is also based on lifting ergo software, but repackaged with a few different functions
-
-
+# NIOSH Software
+- This package can be used in addition to the REBA, but note that it only focuses on the lower back  
 # Joint Angle Calculation Table
 | Limb   | Neck Angle        | Shoulder Angle | Elbow Angle   | Wrist Angle | Trunk  Angle      | Trunk Tort Angle   | Leg  Angle  | 
 |--------|--------------|----------|---------|-------|--------------|---------------|-------|
