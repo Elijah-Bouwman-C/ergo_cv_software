@@ -8,7 +8,7 @@
   
 # Current Goals:
 - Repackage data for EHS Smart
-- Set up appeal process
+- Set up EJMS appeal process w/ REBA
 
 # Future Goals:
 - Move app to the citrix platform
