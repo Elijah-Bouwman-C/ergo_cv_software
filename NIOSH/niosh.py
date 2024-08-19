@@ -5,8 +5,8 @@ import math
 import time
 import os
 import pandas as pd
-from app_utils import *
-from ergo_ui import *
+from EJMS.app_utils import *
+from Documentation.Old Guis.ergo_ui import *
 
 
 def get_rwl(dfs,lift_freq,c,duration):
