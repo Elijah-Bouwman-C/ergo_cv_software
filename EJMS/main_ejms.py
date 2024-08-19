@@ -5,14 +5,12 @@ import math
 import time
 import os
 import pandas as pd
-from ergo_ui import *
-from app_utils import *
+# from EJMS.ergo_ui import *
+from EJMS.app_utils import *
 
 
 
-
-
-def main():
+def main(height,weight,video_path):
     
     #Config net model
     mp_drawing = mp.solutions.drawing_utils
@@ -21,11 +19,11 @@ def main():
     # mp_face_detection = mp.solutions.face_detection
 
     #Config video
-    height,weight,video_path = get_height_weight_video_path()
+    # height,weight,video_path = get_height_weight_video_path()
     cap = cv2.VideoCapture(video_path)
     fps = cap.get(cv2.CAP_PROP_FPS)
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-    output_path = f'{video_path)}.mp4'
+    output_path = f'{video_path}.mp4'
     vid_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     vid_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     out = cv2.VideoWriter(output_path,fourcc,15,(vid_width,vid_height))
@@ -120,6 +118,3 @@ def main():
     out.release()
     cap.release()
     cv2.destroyAllWindows()
-
-if __name__ == "__main__":
-    main()
