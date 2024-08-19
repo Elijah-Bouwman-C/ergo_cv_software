@@ -59,7 +59,7 @@ def main(video_path):
             #draw the hands
             for hand_landmarks,handedness in zip(hand_results.multi_hand_landmarks,hand_results.multi_handedness):
                 mp_drawing.draw_landmarks(
-                    frame,
+                    blank_image,
                     hand_landmarks,
                     mp_hands.HAND_CONNECTIONS,
                     mp_drawing_styles.get_default_hand_landmarks_style(),
@@ -80,7 +80,7 @@ def main(video_path):
         if pose_results.pose_landmarks:
             landmarks = pose_results.pose_landmarks.landmark
             mp_drawing.draw_landmarks(
-                frame,
+                blank_image,
                 pose_results.pose_landmarks,
                 mp_pose.POSE_CONNECTIONS,
                 landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style())
@@ -99,9 +99,9 @@ def main(video_path):
         
         if cv2.waitKey(5) & 0xFF == ord('q'):
             break
-        out.write(frame)
+        out.write(blank_image)
 
-        cv2.imshow('MediaPipe Hands', frame)
+        cv2.imshow('MediaPipe Hands', blank_image)
 
     out.release()
     cap.release()
