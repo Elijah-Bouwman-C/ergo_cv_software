@@ -10,5 +10,5 @@
 # Python Code 
 - You are going to need to download the neural network from here (Although I highly recommend using any model from OpenCV)
   https://github.com/quanhua92/human-pose-estimation-opencv/tree/master
-
+- Here is a repository of different available pose estimation models
   https://github.com/opencv/opencv_extra/tree/4.x/testdata/dnn
