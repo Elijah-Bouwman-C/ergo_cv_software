@@ -1,7 +1,7 @@
 # Ergonomics Computer Vision Software 
 
 - This software package is based on opencv-python and mediapipe from Google and is meant to replicate the measurements made by a goniometer
-- There are alternative versions of this software not based on mediapipe at https://github.com/Elijah-Bouwman-C/ergo_cv_software/tree/main/Documentation/alternative_code
+- THERE ARE ALTERNATIVE VERSIONS OF THIS SOFTWARE NOT BASED ON MEDIAPIPE AT https://github.com/Elijah-Bouwman-C/ergo_cv_software/tree/main/Documentation/alternative_code
 - It takes in a .mp4 or .mov file and then maps a skeleton onto their limbs
 - Datapoints are extracted and converted into .csv files along with an anonymized recording of the simulation
 - These csv files can be analyzed in EHS Smart or sent on to an ergonomist
