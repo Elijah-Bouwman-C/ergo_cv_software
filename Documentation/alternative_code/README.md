@@ -8,5 +8,7 @@
 - Highly recommend updating to the latest MATLAB and then using this framework:
  https://www.mathworks.com/help/vision/ug/multi-object-tracking-and-human-pose-estimation.html
 # Python Code 
-- You are going to need to download the neural network from here (Although I highly recommend using the COCO or OpenPose version instead)
+- You are going to need to download the neural network from here (Although I highly recommend using any model from OpenCV)
   https://github.com/quanhua92/human-pose-estimation-opencv/tree/master
+
+  https://github.com/opencv/opencv_extra/tree/4.x/testdata/dnn
