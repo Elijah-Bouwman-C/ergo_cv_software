@@ -19,7 +19,6 @@
 # NIOSH Software
 - This package can be used in addition to the REBA, but note that it only focuses on the lower back  
 # Reference Papers and Resources 
-- I highly recommend reading through these papers in order to understand the limitations of the software package
 | Limb   | Neck Angle        | Shoulder Angle |  
 |--------|--------------|----------|
 | Limb 1 | left ear     | hip      | 
