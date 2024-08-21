@@ -18,3 +18,6 @@
 - Improve general user interface
 - Develop a gesture detection model
 - Fix video window sizing issues
+
+# Misc
+- If you need additional support feel free to reach out to me by email at wndrsn@uiowa.edu or linkedin https://www.linkedin.com/in/william-anderson1/
