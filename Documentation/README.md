@@ -21,8 +21,8 @@
 # Reference Papers and Resources 
 - I highly recommend reading through these papers in order to understand the limitations of the software package
 | OpenPose | BlazePose | Using AI and ML for Injury Prevention |
-|----------------------------------|----------------------------------|-------------------------------------------------------|
-| https://arxiv.org/abs/1812.08008 | https://arxiv.org/abs/2006.10204 | https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11215955/|
+|----------------------------------|----------------------------------|--------------------------------------------------------|
+| https://arxiv.org/abs/1812.08008 | https://arxiv.org/abs/2006.10204 | https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11215955/ |
 # Troubleshooting
 Since the firewall will most likely block any pip install attempts, download the pre-built wheels from these sources (you may have to search for a wheel built for your python version as these are for windows python 3.11) then run whl_setup.py:
 - Download anaconda distribution from https://www.anaconda.com/download make sure to do a user installation so you don't need admin rights
