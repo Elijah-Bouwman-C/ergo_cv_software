@@ -1,3 +1,5 @@
+# Alternative Main Functions
+- These are both proof of concept programs developed in ~1-2 days with limited capability, but serve as a starting point should there be issues with implementation
 # MATLAB Code
 - `matlab_backup.m` is identical to `EJMS_main.py` it is only missing a GUI and the EJMS scoring step
 - It uses the COCO framework and there is a great tutorial here: https://www.youtube.com/watch?v=qR9065BXSLc
