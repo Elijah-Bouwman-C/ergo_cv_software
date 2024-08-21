@@ -1,8 +1,8 @@
 from setuptools import setup 
   
 setup( 
-    name='Collins Aerospace Ergonomics Computer Vision', 
-    version='0.1', 
+    name='EJMS-T', 
+    version='ErgoVantage', 
     author='Collins EH&S CR', 
     install_requires=[ 
         'numpy', 
