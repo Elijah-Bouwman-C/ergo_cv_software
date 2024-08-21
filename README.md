@@ -20,4 +20,4 @@
 - Fix video window sizing issues
 
 # Misc
-- If you need additional help feel free to reach out to me by email at wndrsn@uiowa.edu or linkedin https://www.linkedin.com/in/william-anderson1/
+- If you need additional help feel free to reach out to me by email at con.anderson.william@gmail.com or linkedin https://www.linkedin.com/in/william-anderson1/
