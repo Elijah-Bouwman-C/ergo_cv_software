@@ -1,10 +1,9 @@
 # MATLAB Code
+- `matlab_backup.m`is identical to `EJMS_main.py` it is only missing a GUI and the EJMS scoring step
 - Might require the toolbox here:
   https://www.mathworks.com/matlabcentral/fileexchange/76860-human-pose-estimation-with-deep-learning
-
 - Might also require this for installation
   https://www.mathworks.com/matlabcentral/answers/389223-how-do-i-silently-install-support-packages-in-matlab-r2018a-or-newer#Downloaded
-
 - Highly recommend updating to the latest MATLAB and then using this framework:
  https://www.mathworks.com/help/vision/ug/multi-object-tracking-and-human-pose-estimation.html
 # Python Code 
