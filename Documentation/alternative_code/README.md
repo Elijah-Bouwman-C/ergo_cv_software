@@ -1,5 +1,6 @@
 # MATLAB Code
 - `matlab_backup.m` is identical to `EJMS_main.py` it is only missing a GUI and the EJMS scoring step
+- It uses the COCO framework and there is a great tutorial here: https://www.youtube.com/watch?v=qR9065BXSLc
 - Might require the toolbox here:
   https://www.mathworks.com/matlabcentral/fileexchange/76860-human-pose-estimation-with-deep-learning
 - Might also require this for installation
